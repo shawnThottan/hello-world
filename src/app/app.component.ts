@@ -45,8 +45,12 @@ export class AppComponent implements OnInit {
     // add event listeners to trigger on different mouse events
     document.addEventListener('mousemove', this.draw);
     document.addEventListener('touchmove', this.draw);
+
     document.addEventListener('mousedown', this.setPosition);
+    document.addEventListener('touchstart', this.setPosition);
+
     document.addEventListener('mouseenter', this.setPosition);
+    document.addEventListener('touchend', this.setPosition);
   }
 
   resize = () => {
