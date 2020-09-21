@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
   }
 
   draw = (e) => {
-    if (e.buttons !== 1 && !e.touches[0]) { return; } // if mouse is not clicked, do not go further
+    // if (e.buttons !== 1 && !e.touches[0]) { return; } // if mouse is not clicked, do not go further
 
     if (!this.pos) {
       this.setPosition(e);
