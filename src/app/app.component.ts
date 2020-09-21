@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   ctx: any;
   pos: any;
   clear = false;
+  color = '#FFA400';
 
   constructor(private router: ActivatedRoute) {
     this.router.queryParams.subscribe(params => {
@@ -46,7 +47,8 @@ export class AppComponent implements OnInit {
     document.addEventListener('mousemove', this.draw);
     document.addEventListener('touchmove', this.draw);
 
-    document.addEventListener('mousedown', this.setPosition);
+    document.addEventListener('mousedown', () => { this.color = '#FFFFFF'; });
+    document.addEventListener('mouseup', () => { this.color = '#FFA400'; });
     document.addEventListener('touchstart', this.setPosition);
 
     document.addEventListener('mouseenter', this.setPosition);
@@ -78,14 +80,12 @@ export class AppComponent implements OnInit {
       this.setPosition(e);
     }
 
-    const color = '#FFA400';
-
     this.ctx.beginPath(); // begin the drawing path
 
     // line properties
     this.ctx.lineWidth = 50; // width of line
     this.ctx.lineCap = 'round'; // rounded end cap
-    this.ctx.strokeStyle = color; // hex color of line
+    this.ctx.strokeStyle = this.color; // hex color of line
 
     // draw line
     this.ctx.moveTo(this.pos.x, this.pos.y); // from position
