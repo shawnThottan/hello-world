@@ -1,9 +1,19 @@
-<div id="main">
+<div id="main" class="unselectable">
     Hello World!<br>
     I'm
     <div class="display-1" id='title'>Shawn S. Thottan</div><br>
 </div>
 
-<img src='../assets/shawn.png' id='image'>
+<div id='image' class="unselectable">
+    <img src='../assets/shawn.png' style="pointer-events: none;">
+</div>
+
+<div id='footer' class="unselectable">
+    <a class='footer-element' href="https://www.youtube.com/channel/UClKMwsWephn9K6jUhSO_w_A?view_as=subscriber">Youtube</a>
+    <a class='footer-element' href="https://www.linkedin.com/in/shawnsthottan/">LinkedIn</a>
+    <a class='footer-element' href="mailto:shawnsthottan@gmail.com">Mail me!</a>
+</div>
+
+<canvas id="draw"></canvas>
 
 <router-outlet></router-outlet>
