@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #000000;
+    background-color: #ffffff;
 }
 
 #background {
@@ -17,12 +17,19 @@ body {
 .panel {
     float: left;
     box-shadow: 0 0 40px 0 #000000a0;
+
+    transition: box-shadow .1s;
+    transition: transform 1s;
 }
 
-.panel:hover, .panel:active {
+.panel:hover {
     box-shadow: 0 0 10px 0 #000000a0;
 }
 
-.panel:hover + .panel, .panel:active + .panel {
+.panel:hover + .panel {
     box-shadow: 0 0 70px 0 #000000a0;
+}
+
+.rotate {
+    transform: rotate3d(0, 1, 0, 180deg);
 }
