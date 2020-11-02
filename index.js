@@ -37,18 +37,6 @@ const colorGradients = [
     },
     {
         to: {
-            r: 0xFF,
-            g: 0xFF,
-            b: 0xFF,
-        },
-        from: {
-            r: 0x00,
-            g: 0x00,
-            b: 0x00,
-        }
-    },
-    {
-        to: {
             r: 0x00,
             g: 0xBF,
             b: 0x8F,
@@ -102,10 +90,7 @@ setBG = () => {
     let i = 0;
     while (i < noOfPanels) {
         const panel = document.createElement('div');
-        panel.style.height = '100%';
-        panel.style.minHeight = '100%';
         panel.style.width = 100 / noOfPanels + '%';
-        panel.style.minWidth = 100 / panelWidth + '%';
         panel.classList.add('panel');
 
         const rFrom = selectedColorGradient.from.r + rDiff * i;

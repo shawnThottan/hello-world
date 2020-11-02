@@ -18,10 +18,11 @@ body {
     float: left;
 
     transition: box-shadow .1s;
-    transition: transform .5s;
+    transition: height .5s ease-out;
 }
 
 .panel {
+    height: 100%;
     box-shadow: 0 0 40px 0 #000000a0;
 }
 
@@ -34,13 +35,13 @@ body {
 }
 
 .rotate {
-    transform: rotate3d(1, 0, 0, 90deg);
+    height: 1px;
 }
 
 .rotate + .panel:not(.rotate) {
-    transform: rotate3d(1, 0, 0, 60deg);
+    height: 30%;
 }
 
 .rotate + .panel:not(.rotate) + .panel:not(.rotate) {
-    transform: rotate3d(1, 0, 0, 30deg);
+    height: 60%;
 }
