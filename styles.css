@@ -16,10 +16,13 @@ body {
 
 .panel {
     float: left;
-    box-shadow: 0 0 40px 0 #000000a0;
 
     transition: box-shadow .1s;
-    transition: transform 1s;
+    transition: transform .5s;
+}
+
+.panel {
+    box-shadow: 0 0 40px 0 #000000a0;
 }
 
 .panel:hover {
@@ -31,5 +34,13 @@ body {
 }
 
 .rotate {
-    transform: rotate3d(0, 1, 0, 180deg);
+    transform: rotate3d(1, 0, 0, 90deg);
+}
+
+.rotate + .panel:not(.rotate) {
+    transform: rotate3d(1, 0, 0, 60deg);
+}
+
+.rotate + .panel:not(.rotate) + .panel:not(.rotate) {
+    transform: rotate3d(1, 0, 0, 30deg);
 }

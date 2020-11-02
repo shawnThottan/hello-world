@@ -42,9 +42,9 @@ const colorGradients = [
             b: 0xFF,
         },
         from: {
-            r: 0xFF,
-            g: 0xFF,
-            b: 0xFF,
+            r: 0x00,
+            g: 0x00,
+            b: 0x00,
         }
     },
     {
@@ -61,9 +61,12 @@ const colorGradients = [
     },
 ]
 
-let selectedColorGradient1, selectedColorGradient2;
+let selectedColorGradient;
 
 ready = () => {
+    const index = Math.round(Math.random() * (colorGradients.length - 1));
+    selectedColorGradient = colorGradients[index];
+
     setBG();
     window.onresize = setBG;
 }
@@ -92,25 +95,9 @@ setBG = () => {
         bgElement.removeChild(bgElement.firstChild);
     }
 
-    const index1 = Math.round(Math.random() * (colorGradients.length - 1));
-    selectedColorGradient1 = colorGradients[index1];
-    let index2 = Math.round(Math.random() * (colorGradients.length - 1));
-    if (index1 === index2) {
-        if (index2 === colorGradients.length - 1) {
-            index2--;
-        } else {
-            index2++;
-        }
-    }
-    selectedColorGradient2 = colorGradients[index2];
-
-    const rDiff1 = (selectedColorGradient1.to.r - selectedColorGradient1.from.r) / (2 * noOfPanels);
-    const gDiff1 = (selectedColorGradient1.to.g - selectedColorGradient1.from.g) / (2 * noOfPanels);
-    const bDiff1 = (selectedColorGradient1.to.b - selectedColorGradient1.from.b) / (2 * noOfPanels);
-
-    const rDiff2 = (selectedColorGradient2.to.r - selectedColorGradient2.from.r) / (2 * noOfPanels);
-    const gDiff2 = (selectedColorGradient2.to.g - selectedColorGradient2.from.g) / (2 * noOfPanels);
-    const bDiff2 = (selectedColorGradient2.to.b - selectedColorGradient2.from.b) / (2 * noOfPanels);
+    const rDiff = (selectedColorGradient.to.r - selectedColorGradient.from.r) / (2 * noOfPanels);
+    const gDiff = (selectedColorGradient.to.g - selectedColorGradient.from.g) / (2 * noOfPanels);
+    const bDiff = (selectedColorGradient.to.b - selectedColorGradient.from.b) / (2 * noOfPanels);
 
     let i = 0;
     while (i < noOfPanels) {
@@ -121,83 +108,50 @@ setBG = () => {
         panel.style.minWidth = 100 / panelWidth + '%';
         panel.classList.add('panel');
 
-        const rHex1 = getGradientHex(selectedColorGradient1.from.r, selectedColorGradient1.to.r, rDiff1, noOfPanels, i);
-        const gHex1 = getGradientHex(selectedColorGradient1.from.g, selectedColorGradient1.to.g, gDiff1, noOfPanels, i);
-        const bHex1 = getGradientHex(selectedColorGradient1.from.b, selectedColorGradient1.to.b, bDiff1, noOfPanels, i);
+        const rFrom = selectedColorGradient.from.r + rDiff * i;
+        const gFrom = selectedColorGradient.from.g + gDiff * i;
+        const bFrom = selectedColorGradient.from.b + bDiff * i;
+        const rTo = selectedColorGradient.to.r - rDiff * (noOfPanels - (i + 1));
+        const gTo = selectedColorGradient.to.g - gDiff * (noOfPanels - (i + 1));
+        const bTo = selectedColorGradient.to.b - bDiff * (noOfPanels - (i + 1));
 
-        const rHex2 = getGradientHex(selectedColorGradient2.from.r, selectedColorGradient2.to.r, rDiff2, noOfPanels, i);
-        const gHex2 = getGradientHex(selectedColorGradient2.from.g, selectedColorGradient2.to.g, gDiff2, noOfPanels, i);
-        const bHex2 = getGradientHex(selectedColorGradient2.from.b, selectedColorGradient2.to.b, bDiff2, noOfPanels, i);
+        const from = `rgba(${rFrom}, ${gFrom}, ${bFrom})`;
+        const to = `rgba(${rTo}, ${gTo}, ${bTo})`;
+        panel.style.backgroundImage = `linear-gradient(${from}, ${to})`;
 
         panel.setAttribute('gradient', 'primary');
-        panel.setAttribute('colors', JSON.stringify({
-            primary: {
-                r: rHex1,
-                g: gHex1,
-                b: bHex1,
-            },
-            secondary: {
-                r: rHex2,
-                g: gHex2,
-                b: bHex2,
-            }
-        }));
-        panel.style.backgroundImage = `linear-gradient(#${rHex1.from + gHex1.from + bHex1.from}, #${rHex1.to + gHex1.to + bHex1.to})`;
 
         bgElement.appendChild(panel);
         i++;
     }
 
-    addFlipInteraction(bgElement);
+    addScrollInteraction(bgElement);
 }
 
-getGradientHex = (from, to, diff, noOfPanels, i) => {
-    from = from + diff * i;
-    to = to - diff * (noOfPanels - (i + 1));
+addScrollInteraction = (bgElement) => {
+    window.onwheel = (event) => {
+        if (event.deltaY > 0) {
+            for (let element of bgElement.children) {
+                const gradientName = element.getAttribute('gradient');
+                if (gradientName === 'secondary') { continue; }
 
-    return {
-        from: ("00" + Math.round(from).toString(16)).substr(-2),
-        to: ("00" + Math.round(to).toString(16)).substr(-2),
-    }
-}
+                const newGradientName = gradientName === 'primary' ? 'secondary' : 'primary';
+                element.classList.add('rotate');
+                element.setAttribute('gradient', newGradientName);
+                break;
+            }
+        } else if (event.deltaY < 0) {
+            let previousElement;
+            for (let element of bgElement.children) {
+                if (element.getAttribute('gradient') === 'primary') { break; }
+                previousElement = element;
+            }
+            if (!previousElement) { return; }
 
-addFlipInteraction = (bgElement) => {
-    const flip = (element, gradientName) => {
-        element.classList.toggle('rotate');
-        const colors = JSON.parse(element.getAttribute('colors'));
-        element.setAttribute('gradient', gradientName);
-        const gradient = colors[gradientName];
-        element.style.backgroundImage = `linear-gradient(#${gradient.r.from + gradient.g.from + gradient.b.from}, #${gradient.r.to + gradient.g.to + gradient.b.to})`;
-    }
-
-    const flipFirst = (element, event) => {
-        const gradientName = element.getAttribute('gradient') === 'primary' ? 'secondary' : 'primary';
-        if (
-            (gradientName === 'secondary' && event.offsetX >= element.offsetWidth ) ||
-            (gradientName === 'primary' && event.offsetX <= 0)
-        ) { flip(element, gradientName); }
-    }
-
-    const flipRest = (element, event) => {
-        const gradientName = element.getAttribute('gradient') === 'primary' ? 'secondary' : 'primary';
-        if (
-            (gradientName === 'secondary' && event.offsetX <= element.offsetWidth / 2 ) ||
-            (gradientName === 'primary' && event.offsetX >= element.offsetWidth / 2)
-        ) { flip(element, gradientName); }
-    }
-
-    for (let element of bgElement.children) {
-        let mousefunction = 'onmouseenter';
-        let flipFunction = (event) => {
-            flipRest(element, event);
+            const gradientName = previousElement.getAttribute('gradient');
+            const newGradientName = gradientName === 'primary' ? 'secondary' : 'primary';
+            previousElement.classList.remove('rotate');
+            previousElement.setAttribute('gradient', newGradientName);
         }
-        if (element === bgElement.firstChild) {
-            mousefunction = 'onmouseleave';
-            flipFunction = (event) => {
-                flipFirst(element, event)
-            };
-        }
-
-        element[mousefunction] = flipFunction;
-    }
+    };
 }
