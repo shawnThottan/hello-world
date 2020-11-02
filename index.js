@@ -35,21 +35,10 @@ const colorGradients = [
             b: 0xF4,
         }
     },
-    {
-        to: {
-            r: 0x00,
-            g: 0xBF,
-            b: 0x8F,
-        },
-        from: {
-            r: 0x00,
-            g: 0x15,
-            b: 0x10,
-        }
-    },
-]
+];
 
 let selectedColorGradient;
+let noOfPanels = 12;
 
 ready = () => {
     const index = Math.round(Math.random() * (colorGradients.length - 1));
@@ -62,7 +51,6 @@ ready = () => {
 setBG = () => {
     const windowWidth = window.innerWidth;
 
-    let noOfPanels = 12;
     if (windowWidth < 230) {
         noOfPanels = 2;
     } else if (windowWidth < 350) {
@@ -78,7 +66,7 @@ setBG = () => {
     }
 
     const bgElement = document.getElementById('background');
-    while (bgElement.hasChildNodes()) {  
+    while (bgElement.hasChildNodes()) {
         bgElement.removeChild(bgElement.firstChild);
     }
 
@@ -99,8 +87,8 @@ setBG = () => {
         const gTo = selectedColorGradient.to.g - gDiff * (noOfPanels - (i + 1));
         const bTo = selectedColorGradient.to.b - bDiff * (noOfPanels - (i + 1));
 
-        const from = `rgba(${rFrom}, ${gFrom}, ${bFrom})`;
-        const to = `rgba(${rTo}, ${gTo}, ${bTo})`;
+        const from = `rgba(${rFrom}, ${gFrom}, ${bFrom}, .9)`;
+        const to = `rgba(${rTo}, ${gTo}, ${bTo}, .9)`;
         panel.style.backgroundImage = `linear-gradient(${from}, ${to})`;
 
         panel.setAttribute('gradient', 'primary');
@@ -112,30 +100,67 @@ setBG = () => {
     addScrollInteraction(bgElement);
 }
 
+const isTouchDevice = () => {
+    const prefixes = ['', '-webkit-', '-moz-', '-o-', '-ms-', ''];
+    const mq = query => window.matchMedia(query).matches;
+
+    if (
+        'ontouchstart' in window ||
+        (window.DocumentTouch && document instanceof DocumentTouch)
+    ) {
+        return true;
+    }
+    return mq(['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join(''));
+};
+
+raiseCurtain = (bgElement) => {
+    setTimeout(() => {
+        let time = 300;
+        document.getElementById('pull-string').style.height = 80 + '%';
+        for (let element of bgElement.children) {
+            setTimeout(() => {
+                element.classList.add('raise');
+                element.setAttribute('gradient', 'secondary');
+            }, time += 100);
+        }
+    }, 300);
+}
+
 addScrollInteraction = (bgElement) => {
+    if (isTouchDevice()) {
+        raiseCurtain(bgElement);
+        return;
+    }
+
     window.onwheel = (event) => {
+        let progress;
         if (event.deltaY > 0) {
+            progress = 1;
             for (let element of bgElement.children) {
                 const gradientName = element.getAttribute('gradient');
+                progress++;
                 if (gradientName === 'secondary') { continue; }
 
                 const newGradientName = gradientName === 'primary' ? 'secondary' : 'primary';
-                element.classList.add('rotate');
+                element.classList.add('raise');
                 element.setAttribute('gradient', newGradientName);
                 break;
             }
         } else if (event.deltaY < 0) {
+            progress = 0;
             let previousElement;
             for (let element of bgElement.children) {
                 if (element.getAttribute('gradient') === 'primary') { break; }
+                progress++;
                 previousElement = element;
             }
             if (!previousElement) { return; }
 
             const gradientName = previousElement.getAttribute('gradient');
             const newGradientName = gradientName === 'primary' ? 'secondary' : 'primary';
-            previousElement.classList.remove('rotate');
+            previousElement.classList.remove('raise');
             previousElement.setAttribute('gradient', newGradientName);
         }
+        document.getElementById('pull-string').style.height = (progress * 80 / noOfPanels) + '%';
     };
 }
