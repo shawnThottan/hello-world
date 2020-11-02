@@ -17,8 +17,7 @@ body {
 .panel {
     float: left;
 
-    transition: box-shadow .1s;
-    transition: height .5s ease-out;
+    transition: all .3s, height .5s ease-out;
 }
 
 .panel {

@@ -76,7 +76,6 @@ setBG = () => {
     } else if (windowWidth < 1220) {
         noOfPanels = 10;
     }
-    let panelWidth = windowWidth / noOfPanels;
 
     const bgElement = document.getElementById('background');
     while (bgElement.hasChildNodes()) {  
