@@ -44,7 +44,7 @@ let player2;
 let ball;
 
 let selectedColorGradient;
-let noOfPanels = 8;
+let noOfPanels;
 
 ready = () => {
     setVariables();
