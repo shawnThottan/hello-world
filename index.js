@@ -42,6 +42,7 @@ let board;
 let player1;
 let player2;
 let ball;
+let titleCard;
 
 let selectedColorGradient;
 let noOfPanels;
@@ -53,6 +54,7 @@ ready = () => {
     window.onresize = setColors;
 
     animate();
+    animateTitleCard();
 }
 
 setVariables = () => {
@@ -61,6 +63,7 @@ setVariables = () => {
     player1 = document.getElementById('player1');
     player2 = document.getElementById('player2');
     ball = document.getElementById('ball');
+    titleCard = document.getElementById('title');
 
     const index = Math.round(Math.random() * (colorGradients.length - 1));
     selectedColorGradient = colorGradients[index];
@@ -73,10 +76,12 @@ setVariables = () => {
 setColors = () => {
     let from = `rgba(${selectedColorGradient.from.r}, ${selectedColorGradient.from.g}, ${selectedColorGradient.from.b}, .9)`;
     let to = `rgba(${selectedColorGradient.to.r}, ${selectedColorGradient.to.g}, ${selectedColorGradient.to.b}, .9)`;
-    const gradient = `linear-gradient(to bottom right, ${from}, ${to})`
+    const gradient = `linear-gradient(to bottom right, ${from}, ${to})`;
     player1.style.backgroundImage = gradient;
     player2.style.backgroundImage = gradient;
     ball.style.backgroundImage = gradient;
+
+    titleCard.style.backgroundImage = `linear-gradient(to bottom right, ${`rgb(${selectedColorGradient.from.r}, ${selectedColorGradient.from.g}, ${selectedColorGradient.from.b})`}, ${`rgb(${selectedColorGradient.to.r}, ${selectedColorGradient.to.g}, ${selectedColorGradient.to.b})`})`;
 
     while (bgElement.hasChildNodes()) {
         bgElement.removeChild(bgElement.firstChild);
@@ -205,7 +210,7 @@ animate = () => {
     let player2YPos = parseInt(player2Style.top.replace('px', ''));
     let player2MovX = 0;
 
-    let playerSpeed = 15;
+    let playerSpeed = 10;
     let ballSpeed = 2;
 
     setInterval(frame, 10);
@@ -299,5 +304,31 @@ animate = () => {
 
         ball.style.left = x + 'px';
         ball.style.top = y + 'px';
+    }
+}
+
+animateTitleCard = () => {
+    titleCard.onmouseenter = (event) => {
+        const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
+        const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
+        titleCard.style.transform = `translate(-50%, -50%) rotateX(${-20 * y}deg) rotateY(${20 * x}deg)`;
+        titleCard.style.boxShadow = `${-10 * x}px ${-10 * y}px 10px 0 #000000a0`;
+
+        setTimeout(() => {
+            titleCard.onmousemove = (event) => {
+                const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
+                const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
+                titleCard.style.transition = 'none';
+                titleCard.style.transform = `translate(-50%, -50%) rotateX(${-20 * y}deg) rotateY(${20 * x}deg)`;
+                titleCard.style.boxShadow = `${-10 * x}px ${-10 * y}px 10px 0 #000000a0`;
+            }
+    
+            titleCard.onmouseleave = (event) => {
+                titleCard.onmousemove = null;
+                titleCard.style.transition = 'all .5s';
+                titleCard.style.transform = 'translate(-50%, -50%)';
+                titleCard.style.boxShadow = `0px 0px 10px 0 #000000a0`;
+            };
+        }, 300);
     }
 }

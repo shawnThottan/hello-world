@@ -58,8 +58,11 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 5rem;
+    transition: all .3s;
+    font-size: 7rem;
     text-align: center;
+    padding: 3rem;
+    color: rgb(255, 255, 255);
  
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -67,6 +70,10 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+
+    border-radius: 30px;
+    box-shadow: 0px 0px 10px 0 #000000a0;
+    background-image: linear-gradient(black, white);
 }
 
 #icon-group {
@@ -78,7 +85,13 @@ body {
 .icon {
     max-height: 3rem;
     margin: 2rem;
+    margin-bottom: 0;
+    filter: brightness(0) invert(1);
+}
+
+.icon:hover {
     filter: brightness(0);
+    transition: 0.5s;
 }
 
 #board {
@@ -94,9 +107,6 @@ body {
     left: 50%;
     transform: translateX(-50%);
     box-shadow: 5px 5px 5px 0 #000000a0;
-    border: solid 2px rgba(0, 0, 0, 0.4);
-
-    transition: all .2s, height .5s ease-out;
 
     height: 1rem;
     width: 9rem;
@@ -117,7 +127,6 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 5px 5px 5px 0 #000000a0;
-    border: solid 2px rgba(0, 0, 0, 0.4);
 
     transition: box-shadow .2s, height .5s ease-out;
 
