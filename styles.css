@@ -59,6 +59,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     transition: all .3s;
+    transform-style: preserve-3d;
     font-size: 7rem;
     text-align: center;
     padding: 3rem;
@@ -76,6 +77,10 @@ body {
     background-image: linear-gradient(black, white);
 }
 
+#text {
+    transform: translateZ(3rem);
+}
+
 #icon-group {
     display: flex;
     flex-direction: row;
@@ -86,11 +91,11 @@ body {
     max-height: 3rem;
     margin: 2rem;
     margin-bottom: 0;
-    filter: brightness(0) invert(1);
+    filter: brightness(0);
 }
 
 .icon:hover {
-    filter: brightness(0);
+    filter: brightness(0) invert(1);
     transition: 0.5s;
 }
 
