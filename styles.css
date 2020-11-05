@@ -94,7 +94,7 @@ body {
     filter: brightness(0);
 }
 
-.icon:hover {
+.icon-parent:hover > .icon {
     filter: brightness(0) invert(1);
     transition: 0.5s;
 }
