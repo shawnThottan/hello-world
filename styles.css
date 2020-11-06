@@ -7,7 +7,7 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #ffffff;
+    background-color: blackfff;
     font-family: 'target-font-family';
 }
 
@@ -134,7 +134,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 5px 5px 5px 0 #ffffffa0;
+    box-shadow: 5px 5px 5px 0 blackfffa0;
     filter: invert(1);
     border: solid 2px white;
 
@@ -149,11 +149,54 @@ body {
     box-shadow: 2px 2px 2px 0 #000000a0;
 }
 
+#siPlayer {
+    position: absolute;
+    left: 50%;
+    bottom: 5%;
+    transform: translateX(-50%);
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    
+    border-bottom: 20px solid black;
+
+    height: 0;
+    width: 0;
+}
+
 .siEnemy {
     position: absolute;
-    top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%);
+}
+
+@keyframes enemy-mov {
+    0% {
+        transform: translate(-250%, 250%);
+    }
+
+    25% {
+        transform: translate(0%, 0%);
+    }
+
+    50% {
+        transform: translate(250%, 250%);
+    }
+
+    75% {
+        transform: translate(0%, 0%);
+    }
+
+    100% {
+        transform: translate(-250%, 250%);
+    }
+}
+
+.bullet {
+    position: absolute;
+    height: 6px;
+    width: 6px;
+    content: '';
+    border-radius: 50%;
+    background: black;
 }
 
 .space-invader { 
@@ -161,14 +204,74 @@ body {
     width: 0.25em; 
     height: 0.25em; 
     margin: 40px 40px;
+    animation: enemy-mov 3s infinite;
 }
 
-.space-invader.animate { 
-  animation: 1s infinite;
+.space-invader.animate {
+  animation: 2s infinite;
 }
   
 .space-invader-1 {
     box-shadow:
+      0 0 0 .25em green,
+      0 .25em 0 .25em green,
+      -.625em .375em 0 .125em green,
+      .625em .375em 0 .125em green,
+      -.75em -.75em 0 0 green,
+      .75em -.75em 0 0 green,
+      -.5em -.5em 0 0 green,
+      .5em -.5em 0 0 green,
+      -.75em -.25em 0 0 green,
+      -.5em -.25em 0 0 green,
+      .5em -.25em 0 0 green,
+      .75em -.25em 0 0 green,
+      -1em 0 0 0 green,
+      -.75em 0 0 0 green,
+      .75em 0 0 0 green,
+      1em 0 0 0 green,
+      -1em .25em 0 0 green,
+      1em .25em 0 0 green,
+      -.75em .75em 0 0 green,
+      .75em .75em 0 0 green,
+      /* Left Arm */
+      1.25em .25em 0 0 green,
+      1.25em .5em 0 0 green,
+      1.25em .75em 0 0 green,
+      /* Right Arm */
+      -1.25em .25em 0 0 green,
+      -1.25em .5em 0 0 green,
+      -1.25em .75em 0 0 green,
+      /* Left Foot */
+      -.25em 1em 0 0 green,
+      -.5em 1em 0 0 green,
+      /* Right Foot */
+      .25em 1em 0 0 green,
+      .5em 1em 0 0 green;
+}
+
+.space-invader-1.animate {
+  animation-name: space-invader-1;
+}
+
+@keyframes space-invader-1 {
+    0% {
+        transform: translate(-250%, 250%);
+    }
+
+    25% {
+        transform: translate(0%, 0%);
+    }
+
+    75% {
+        transform: translate(0%, 0%);
+    }
+
+    100% {
+        transform: translate(-250%, 250%);
+    }
+    50% {
+        transform: translate(250%, 250%);
+        box-shadow: 
       0 0 0 .25em black,
       0 .25em 0 .25em black,
       -.625em .375em 0 .125em black,
@@ -190,68 +293,169 @@ body {
       -.75em .75em 0 0 black,
       .75em .75em 0 0 black,
       /* Left Arm */
-      1.25em .25em 0 0 black,
-      1.25em .5em 0 0 black,
-      1.25em .75em 0 0 black,
+      1.25em 0 0 0 black,
+      1.25em -.25em 0 0 black,
+      1.25em -.5em 0 0 black,
       /* Right Arm */
-      -1.25em .25em 0 0 black,
-      -1.25em .5em 0 0 black,
-      -1.25em .75em 0 0 black,
+      -1.25em 0 0 0 black, 
+      -1.25em -.25em 0 0 black, 
+      -1.25em -.5em 0 0 black, 
       /* Left Foot */
-      -.25em 1em 0 0 black,
-      -.5em 1em 0 0 black,
+      -1em 1em 0 0 black, 
+      -1em 1em 0 0 black, 
       /* Right Foot */
-      .25em 1em 0 0 black,
-      .5em 1em 0 0 black;
+      1em 1em 0 0 black, 
+      1em 1em 0 0 black;
+    }
 }
 
-.space-invader-1.animate {
-  animation-name: space-invader-1;
-}
-
-.space-invader-2 { 
+.space-invader-2 {
   box-shadow: 
     /* Body */
-    -.125em -.5em 0 .25em black,
-    .125em -.5em 0 .25em black,
-    -.75em -.375em 0 .125em black,
-    -.875em -.375em 0 .125em black,
-    .75em -.375em 0 .125em black,
-    .875em -.375em 0 .125em black,
-    -1em 0 0 .25em black,
-    1em 0 0 .25em black,
-    -.5em .25em 0 0 black,
-    -.25em .25em 0 0 black,
-    0 .25em 0 0 black,
-    .25em .25em 0 0 black,
-    .5em .25em 0 0 black,
+    -.125em -.5em 0 .25em green,
+    .125em -.5em 0 .25em green,
+    -.75em -.375em 0 .125em green,
+    -.875em -.375em 0 .125em green,
+    .75em -.375em 0 .125em green,
+    .875em -.375em 0 .125em green,
+    -1em 0 0 .25em green,
+    1em 0 0 .25em green,
+    -.5em .25em 0 0 green,
+    -.25em .25em 0 0 green,
+    0 .25em 0 0 green,
+    .25em .25em 0 0 green,
+    .5em .25em 0 0 green,
     /* Crotch */
-    .3125em .5em 0 0 black,
-    .5em .5em 0 0 black,
-    .5em .5em 0 0 black,
-    -.3125em .5em 0 0 black,
-    -.5em .5em 0 0 black,
-    -.5em .5em 0 0 black,
-    .0625em .75em 0 0 black,
-    -.0625em .75em 0 0 black,
+    .3125em .5em 0 0 green,
+    .5em .5em 0 0 green,
+    .5em .5em 0 0 green,
+    -.3125em .5em 0 0 green,
+    -.5em .5em 0 0 green,
+    -.5em .5em 0 0 green,
+    .0625em .75em 0 0 green,
+    -.0625em .75em 0 0 green,
     /* Right Leg */
-    -.625em .75em 0 0 black,
-    -.8125em .75em 0 0 black,
-    -1.0625em 1em 0 0 black,
-    -1.25em 1em 0 0 black,
+    -.625em .75em 0 0 green,
+    -.8125em .75em 0 0 green,
+    -1.0625em 1em 0 0 green,
+    -1.25em 1em 0 0 green,
     /* Left Leg */
-    .625em .75em 0 0 black,
-    .8125em .75em 0 0 black,
-    1.0625em 1em 0 0 black,
-    1.25em 1em 0 0 black;
+    .625em .75em 0 0 green,
+    .8125em .75em 0 0 green,
+    1.0625em 1em 0 0 green,
+    1.25em 1em 0 0 green;
 }
 
 .space-invader-2.animate {
   animation-name: space-invader-2;
 }
 
+@keyframes space-invader-2 {
+    0% {
+        transform: translate(-250%, 250%);
+    }
+
+    25% {
+        transform: translate(0%, 0%);
+    }
+
+    75% {
+        transform: translate(0%, 0%);
+    }
+
+    100% {
+        transform: translate(-250%, 250%);
+    }
+    50% {
+        transform: translate(250%, 250%);
+        box-shadow: 
+      /* Body */
+      -.125em -.5em 0 .25em black,
+      .125em -.5em 0 .25em black,
+      -.75em -.375em 0 .125em black,
+      -.875em -.375em 0 .125em black,
+      .75em -.375em 0 .125em black,
+      .875em -.375em 0 .125em black,
+      -1em 0 0 .25em black,
+      1em 0 0 .25em black,
+      -.5em .25em 0 0 black,
+      -.25em .25em 0 0 black,
+      0 .25em 0 0 black,
+      .25em .25em 0 0 black,
+      .5em .25em 0 0 black,
+      /* Crotch */
+      .3125em .5em 0 0 black,
+      .5em .5em 0 0 black,
+      .625em .5em 0 0 black,
+      -.3125em .5em 0 0 black,
+      -.5em .5em 0 0 black,
+      -.625em .5em 0 0 black,
+      .0625em .75em 0 0 black,
+      -.0625em .75em 0 0 black,
+      /* Right Leg */
+      -.75em .75em 0 0 black,
+      -.9375em .75em 0 0 black,
+      -.75em 1em 0 0 black,
+      -.5em 1em 0 0 black,
+      /* Left Leg */
+      .75em .75em 0 0 black,
+      .9375em .75em 0 0 black,
+      .75em 1em 0 0 black,
+      .5em 1em 0 0 black;
+    }
+}
+
 .space-invader-3 { 
   box-shadow: 
+    /* Body */
+    0 -.625em 0 .125em green,
+    -.25em -.375em 0 .125em green,
+    .25em -.375em 0 .125em green,
+    .625em -.25em 0 0 green,
+    -.625em -.25em 0 0 green,
+    0 .125em 0 .125em green,
+    -.75em .125em 0 .125em green,
+    .75em .125em 0 .125em green,
+    .375em .25em 0 0 green,
+    -.375em .25em 0 0 green,
+    /* Crotch */
+    .125em .5em 0 0 green,
+    -.125em .5em 0 0 green,
+    /* Right Leg */
+    -.625em .5em 0 0 green,
+    -.875em .75em 0 0 green,
+    -.625em 1em 0 0 green,
+    -.625em 1em 0 0 green,
+    /* Left Leg */
+    .625em .5em 0 0 green,
+    .875em .75em 0 0 green,
+    .625em 1em 0 0 green,
+    .625em 1em 0 0 green;
+}
+
+.space-invader-3.animate {
+  animation-name: space-invader-3;
+}
+
+@keyframes space-invader-3 {
+    0% {
+        transform: translate(-250%, 250%);
+    }
+
+    25% {
+        transform: translate(0%, 0%);
+    }
+
+    75% {
+        transform: translate(0%, 0%);
+    }
+
+    100% {
+        transform: translate(-250%, 250%);
+    }
+    50% {
+        transform: translate(250%, 250%);
+        box-shadow: 
     /* Body */
     0 -.625em 0 .125em black,
     -.25em -.375em 0 .125em black,
@@ -263,21 +467,18 @@ body {
     .75em .125em 0 .125em black,
     .375em .25em 0 0 black,
     -.375em .25em 0 0 black,
-    /* Crotch */
+      /* Crotch */
     .125em .5em 0 0 black,
     -.125em .5em 0 0 black,
-    /* Right Leg */
-    -.625em .5em 0 0 black,
-    -.875em .75em 0 0 black,
-    -.625em 1em 0 0 black,
-    -.625em 1em 0 0 black,
-    /* Left Leg */
-    .625em .5em 0 0 black,
-    .875em .75em 0 0 black,
-    .625em 1em 0 0 black,
-    .625em 1em 0 0 black;
-}
-
-.space-invader-3.animate {
-  animation-name: space-invader-3;
+      /* Right Leg */
+      -.375em .5em 0 0 black,
+      -.625em .75em 0 0 black,
+      -.875em 1em 0 0 black,
+      -.375em 1em 0 0 black,
+      /* Left Leg */
+      .375em .5em 0 0 black,
+      .625em .75em 0 0 black,
+      .875em 1em 0 0 black,
+      .375em 1em 0 0 black;
+    }
 }

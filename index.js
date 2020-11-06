@@ -44,6 +44,9 @@ let player2;
 let ball;
 let titleCard;
 let titleText;
+let siPlayer
+
+let controllerPos;
 
 let selectedColorGradient;
 let noOfPanels;
@@ -66,6 +69,7 @@ setVariables = () => {
     ball = document.getElementById('ball');
     titleCard = document.getElementById('title');
     titleText = document.getElementById('text');
+    siPlayer = document.getElementById('siPlayer');
 
     const index = Math.round(Math.random() * (colorGradients.length - 1));
     selectedColorGradient = colorGradients[index];
@@ -73,6 +77,12 @@ setVariables = () => {
     const windowRatio = window.innerWidth / window.innerHeight;
     noOfPanels = Math.round(windowRatio * 5);
 
+    board.addEventListener('mousemove', (event) => {
+        controllerPos = event.clientX;
+    });
+    board.addEventListener('mouseleave', (event) => {
+        controllerPos = undefined;
+    });
 }
 
 setColors = () => {
@@ -139,9 +149,9 @@ raiseCurtain = () => {
             setTimeout(() => {
                 element.classList.add('raise');
                 element.setAttribute('gradient', 'secondary');
-            }, time += 100);
+            }, time += 200);
         }
-    }, 300);
+    }, 600);
 }
 
 addScrollInteraction = () => {
@@ -238,7 +248,7 @@ setGame = () => {
     let games = [
         'none',
         'pong',
-        // 'space-invader',
+        'space-invader',
     ];
 
     board.addEventListener('click', (event) => {
@@ -253,8 +263,12 @@ setGame = () => {
                 clearInterval(pongAnimate);
                 break;
             case 'space-invader':
-                document.getElementById('space-invader').style.display = 'none';
-                // clearInterval(siAnimate);
+                const spaceInvader = document.getElementById('space-invader');
+                for (invader of invaders) { invader.remove(); }
+                for (bullet of bullets) { bullet.remove(); }
+
+                spaceInvader.style.display = 'none';
+                clearInterval(siAnimate);
                 break;
         }
 
@@ -268,6 +282,7 @@ setGame = () => {
                 break;
             case 'space-invader':
                 document.getElementById('space-invader').style.display = 'block';
+                playSpaceInvaders();
                 break;
         }
 
@@ -301,13 +316,6 @@ playPong = () => {
     let player1YPos = parseInt(player1Style.top.replace('px', ''));
     let player1MovX = 0;
 
-    let controllerPos;
-    board.addEventListener('mousemove', (event) => {
-        controllerPos = event.clientX;
-    });
-    board.addEventListener('mouseleave', (event) => {
-        controllerPos = undefined;
-    });
     let player2XPos = window.innerWidth / 2 + padWidth / 2;
     let player2YPos = parseInt(player2Style.top.replace('px', ''));
     let player2MovX = 0;
@@ -411,4 +419,103 @@ playPong = () => {
         ball.style.left = x + 'px';
         ball.style.top = y + 'px';
     }
+}
+
+let siAnimate;
+let invaders = [];
+let bullets = [];
+playSpaceInvaders = () => {
+    const spaceInvader = document.getElementById('space-invader');
+
+    let player = document.getElementById('siPlayer');
+    let playerXPos = window.innerWidth / 2;
+    let playerMovX = 0;
+    let playerSpeed = 5;
+
+    invaders = [];
+    bullets = [];
+
+    for (let i = 0; i < window.innerWidth - 300; i+=100) {
+        for (let j = 0; j < window.innerHeight - 500; j+=100) {
+            const invader = document.createElement('div');
+            const invaderType = Math.round(Math.random() * 2) + 1;
+            invader.classList.add('space-invader', `space-invader-${invaderType}` , 'animate');
+
+            const parent = document.createElement('a');
+            parent.href = 'https://codepen.io/DDN-Shep/pen/pvggaX';
+            parent.target = '_target';
+            parent.classList.add('siEnemy');
+            parent.style.bottom = 300 + j + 'px';
+            parent.style.left = 200 + i + 'px';
+            parent.appendChild(invader);
+
+            spaceInvader.appendChild(parent);
+            invaders.push(parent);
+        }
+    }
+
+    let frameCount = 0;
+    const frame = () => {
+        frameCount++;
+
+        // move player
+        if (controllerPos !== undefined) {
+            playerDiff = controllerPos - playerXPos;
+            if (Math.abs(playerDiff / window.innerWidth) < .01) {
+                playerMovX = 0;
+            } else {
+                playerMovX = Math.sign(playerDiff);
+            }
+
+            playerXPos += playerMovX * playerSpeed;
+            player.style.left = playerXPos + 'px';
+        }
+
+        // shoot
+        if (!(frameCount % 50)) {
+            const bullet = document.createElement('div');
+            bullet.classList.add('bullet');
+            bullet.style.left = playerXPos + 'px';
+            bullet.style.bottom = '40px';
+            spaceInvader.appendChild(bullet);
+            bullets.push(bullet);    
+        }
+
+        // move bullet
+        for (let i = 0; i < bullets.length; i++) {
+            const bullet = bullets[i];
+            const bottom = parseInt(bullet.style.bottom.replace('px', ''));
+            const left = parseInt(bullet.style.left.replace('px', ''));
+            bullet.style.bottom = bottom + 2 + 'px';
+
+            if (bottom > window.innerHeight) {
+                bullets.splice(i, 1);
+                bullet.remove();
+            }
+
+            for (let j = 0; j < invaders.length; j++) {
+                const invader = invaders[j];
+                const invaderBottom = parseInt(invader.style.bottom.replace('px', ''));
+                const invaderLeft = parseInt(invader.style.left.replace('px', ''));
+                yDiff = Math.abs(invaderBottom - bottom);
+                xDiff = Math.abs(invaderLeft - left);
+                if (yDiff < 10 && xDiff < 20) {
+                    invaders.splice(j, 1);
+                    invader.remove();
+                    bullets.splice(i, 1);
+                    bullet.remove();
+
+                    if (!invaders.length) {
+                        for (let invader of invaders) { invader.remove(); }
+                        for (let bullet of bullets) { bullet.remove(); }
+
+                        clearInterval(siAnimate);
+                        playSpaceInvaders();
+                    }
+                    break;
+                }
+            };
+        };
+    };
+    siAnimate = setInterval(frame, 1);
 }
