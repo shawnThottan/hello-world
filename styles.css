@@ -53,7 +53,7 @@ body {
     height: 60%;
 }
 
-#title {
+#card {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -91,9 +91,10 @@ body {
 
 .icon {
     transition: 0.5s;
-    max-height: 3rem;
-    margin: 2rem;
-    margin-bottom: 0;
+    max-height: 5vh;
+    margin: 3rem;
+    margin-top: auto;
+    margin-bottom: auto;
     filter: brightness(0);
 }
 

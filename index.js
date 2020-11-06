@@ -51,6 +51,8 @@ let controllerPos;
 let selectedColorGradient;
 let noOfPanels;
 
+let isTouchDevice;
+
 ready = () => {
     setVariables();
 
@@ -67,7 +69,7 @@ setVariables = () => {
     player1 = document.getElementById('player1');
     player2 = document.getElementById('player2');
     ball = document.getElementById('ball');
-    titleCard = document.getElementById('title');
+    titleCard = document.getElementById('card');
     titleText = document.getElementById('text');
     siPlayer = document.getElementById('siPlayer');
 
@@ -83,6 +85,30 @@ setVariables = () => {
     board.addEventListener('mouseleave', (event) => {
         controllerPos = undefined;
     });
+
+    if ('ontouchstart' in window || (window.DocumentTouch && document instanceof DocumentTouch)) {
+        isTouchDevice = true;
+    } else {
+        const mq = query => window.matchMedia(query).matches;
+        isTouchDevice = mq(['(', ['', '-webkit-', '-moz-', '-o-', '-ms-', ''].join('touch-enabled),('), 'heartz', ')'].join(''));
+    }
+
+    if (window.innerWidth < window.innerHeight) {
+        titleCard.style.width = '80%';
+        titleCard.style.height = '80%';
+        titleCard.style.fontSize = '12vw';
+
+        titleText.style.position = 'absolute';
+
+        titleText.style.top = '30%';
+        titleText.style.left = '0';
+
+        const iconGroup = document.getElementById('icon-group');
+        iconGroup.style.position = 'absolute';
+        iconGroup.style.top = '80%';
+        iconGroup.style.left = '50%';
+        iconGroup.style.transform = 'translate(-50%, -50%)';
+    }
 }
 
 setColors = () => {
@@ -129,19 +155,6 @@ setColors = () => {
     addScrollInteraction();
 }
 
-const isTouchDevice = () => {
-    const prefixes = ['', '-webkit-', '-moz-', '-o-', '-ms-', ''];
-    const mq = query => window.matchMedia(query).matches;
-
-    if (
-        'ontouchstart' in window ||
-        (window.DocumentTouch && document instanceof DocumentTouch)
-    ) {
-        return true;
-    }
-    return mq(['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join(''));
-};
-
 raiseCurtain = () => {
     setTimeout(() => {
         let time = 300;
@@ -157,9 +170,7 @@ raiseCurtain = () => {
 addScrollInteraction = () => {
     raiseCurtain();
 
-    if (isTouchDevice()) {
-        return;
-    }
+    if (isTouchDevice) { return; }
 
     window.onwheel = (event) => {
         let progress;
@@ -242,7 +253,7 @@ animateTitleCard = () => {
 }
 
 setGame = () => {
-    if (isTouchDevice()) { return; }
+    if (isTouchDevice) { return; }
 
     let game = 0;
     let games = [
