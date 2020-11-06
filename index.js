@@ -184,21 +184,36 @@ addScrollInteraction = () => {
 }
 
 animateTitleCard = () => {
-    if (isTouchDevice()) {
-        titleCard.onmouseclick = (event) => {
-            const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
-            const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
+    const move = (event) => {
+        const xPos = event.clientX || event.touches[0].clientX;
+        const yPos = event.clientY || event.touches[0].clientY;
+        const x = (xPos - (window.innerWidth / 2)) / (window.innerWidth / 2);
+        const y = (yPos - (window.innerHeight / 2)) / (window.innerHeight / 2);
 
-            titleCard.style.transform = `translate(-50%, -50%) rotateX(${-20 * y}deg) rotateY(${20 * x}deg)`;
-            titleCard.style.boxShadow = `${-30 * x}px ${-30 * y}px 20px 0 #000000a0`;
-            titleText.style.textShadow = `${-20 * x}px ${-20 * y}px #00000050`;
-        }
-        return;
-    }
+        titleCard.style.transition = 'none';
+        titleCard.style.transform = `translate(-50%, -50%) rotateX(${-30 * y}deg) rotateY(${30 * x}deg)`;
+        titleCard.style.boxShadow = `${-30 * x}px ${-30 * y}px 20px 0 #000000a0`;
 
-    titleCard.onmouseenter = (event) => {
-        const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
-        const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
+        titleText.style.transition = 'none';
+        titleText.style.textShadow = `${-30 * x}px ${-30 * y}px #00000050`;
+    };
+
+    const end = (event) => {
+        titleCard.onmousemove = null;
+
+        titleCard.style.transition = 'all .5s';
+        titleCard.style.transform = 'translate(-50%, -50%)';
+        titleCard.style.boxShadow = `0px 0px 0px 0 #000000a0`;
+
+        titleText.style.transition = 'all .5s';
+        titleText.style.textShadow = `0px 0px #00000050`;
+    };
+
+    titleCard.ontouchstart = titleCard.onmouseenter = (event) => {
+        const xPos = event.clientX || event.touches[0].clientX;
+        const yPos = event.clientY || event.touches[0].clientY;
+        const x = (xPos - (window.innerWidth / 2)) / (window.innerWidth / 2);
+        const y = (yPos - (window.innerHeight / 2)) / (window.innerHeight / 2);
 
         titleCard.style.transition = 'all .5s';
         titleCard.style.transform = `translate(-50%, -50%) rotateX(${-20 * y}deg) rotateY(${20 * x}deg)`;
@@ -208,33 +223,15 @@ animateTitleCard = () => {
         titleText.style.textShadow = `${-20 * x}px ${-20 * y}px #00000050`;
 
         setTimeout(() => {
-            titleCard.onmousemove = (event) => {
-                const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
-                const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
-
-                titleCard.style.transition = 'none';
-                titleCard.style.transform = `translate(-50%, -50%) rotateX(${-30 * y}deg) rotateY(${30 * x}deg)`;
-                titleCard.style.boxShadow = `${-30 * x}px ${-30 * y}px 20px 0 #000000a0`;
-
-                titleText.style.transition = 'none';
-                titleText.style.textShadow = `${-30 * x}px ${-30 * y}px #00000050`;
-            }
-    
-            titleCard.onmouseleave = (event) => {
-                titleCard.onmousemove = null;
-
-                titleCard.style.transition = 'all .5s';
-                titleCard.style.transform = 'translate(-50%, -50%)';
-                titleCard.style.boxShadow = `0px 0px 0px 0 #000000a0`;
-
-                titleText.style.transition = 'all .5s';
-                titleText.style.textShadow = `0px 0px #00000050`;
-            };
+            titleCard.ontouchmove = titleCard.onmousemove = move;
+            titleCard.ontouchend = titleCard.onmouseleave = end;
         }, 300);
     }
 }
 
 setGame = () => {
+    if (isTouchDevice()) { return; }
+
     let game = 0;
     let games = [
         'none',
@@ -257,6 +254,13 @@ setGame = () => {
         // set new game
         game++;
         game %= games.length
+        if (game) {
+            titleCard.style.filter = 'blur(5px)';
+            document.getElementById('icon-group').style.pointerEvents = 'none';
+        } else {
+            titleCard.style.filter = 'blur(0)';
+            document.getElementById('icon-group').style.pointerEvents = 'auto';
+        }
         switch(games[game]) {
             case 'pong':
                 document.getElementById('pong').style.display = 'block';
@@ -281,7 +285,7 @@ playPong = () => {
     let y = window.innerHeight / 2 + ballRadius / 2;
 
     let ballMovX = 2;
-    let ballMovY = 1;
+    let ballMovY = -1;
 
     let player1XPos = window.innerWidth / 2 + padWidth / 2;
     let player1YPos = parseInt(player1Style.top.replace('px', ''));
@@ -302,6 +306,7 @@ playPong = () => {
     let ballSpeed = 2;
 
     pongAnimate = setInterval(frame, 10);
+
     function frame() {
         // movePlayer1
         let playerDiff;
@@ -360,7 +365,10 @@ playPong = () => {
         // moveBall
         if (x - ballRadius <= 0 || x + ballRadius >= window.innerWidth)  { ballMovX *= -1; }
 
-        if (y - ballRadius <= 0 || y + ballRadius >= window.innerHeight)  { ballMovY *= -1; }
+        if (y - ballRadius <= 0 || y + ballRadius >= window.innerHeight)  {
+            clearInterval(pongAnimate);
+            playPong();
+        }
 
         const ballLeft = x - ballRadius;
         const ballRight = x + ballRadius;

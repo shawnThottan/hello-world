@@ -99,7 +99,7 @@ body {
 
 .icon-parent:hover > .icon {
     filter: brightness(0) invert(1);
-    transform: translateZ(3rem);
+    transform: translateZ(2rem);
 }
 
 #board {
