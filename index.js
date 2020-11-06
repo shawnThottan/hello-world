@@ -493,35 +493,42 @@ playSpaceInvaders = () => {
             const bullet = bullets[i];
             const bottom = parseInt(bullet.style.bottom.replace('px', ''));
             const left = parseInt(bullet.style.left.replace('px', ''));
-            bullet.style.bottom = bottom + 2 * frameCount + 'px';
+            let removeBullet = false;
+            for (let f = 0; f < frameCount; f++) {
+                if (removeBullet) { break; }
 
-            if (bottom > window.innerHeight) {
-                bullets.splice(i, 1);
-                bullet.remove();
-            }
+                bullet.style.bottom = bottom + 2 + 'px';
 
-            for (let j = 0; j < invaders.length; j++) {
-                const invader = invaders[j];
-                const invaderBottom = parseInt(invader.style.bottom.replace('px', '')) + 50;
-                const invaderLeft = parseInt(invader.style.left.replace('px', ''));
-                yDiff = Math.abs(invaderBottom - bottom);
-                xDiff = Math.abs(invaderLeft - left);
-                if (yDiff < 10 && xDiff < 30) {
-                    invaders.splice(j, 1);
-                    invader.remove();
+                if (bottom > window.innerHeight) { removeBullet = true; }
+
+                for (let j = 0; j < invaders.length; j++) {
+                    const invader = invaders[j];
+                    const invaderBottom = parseInt(invader.style.bottom.replace('px', '')) + 50;
+                    const invaderLeft = parseInt(invader.style.left.replace('px', ''));
+                    yDiff = Math.abs(invaderBottom - bottom);
+                    xDiff = Math.abs(invaderLeft - left);
+                    if (yDiff < 10 && xDiff < 30) {
+                        invaders.splice(j, 1);
+                        invader.remove();
+                        removeBullet = true;
+
+                        if (!invaders.length) {
+                            for (let invader of invaders) { invader.remove(); }
+                            for (let bullet of bullets) { bullet.remove(); }
+
+                            clearInterval(siAnimate);
+                            playSpaceInvaders();
+                        }
+                        break;
+                    }
+                };
+                if (removeBullet) {
                     bullets.splice(i, 1);
                     bullet.remove();
-
-                    if (!invaders.length) {
-                        for (let invader of invaders) { invader.remove(); }
-                        for (let bullet of bullets) { bullet.remove(); }
-
-                        clearInterval(siAnimate);
-                        playSpaceInvaders();
-                    }
-                    break;
+                } else {
+                    bullet.style.bottom = bottom + 2 * frameCount + 'px';
                 }
-            };
+            }
         };
     };
     siAnimate = setInterval(frame, 1);
