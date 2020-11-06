@@ -134,7 +134,9 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 5px 5px 5px 0 #000000a0;
+    box-shadow: 5px 5px 5px 0 #ffffffa0;
+    filter: invert(1);
+    border: solid 2px white;
 
     transition: box-shadow .2s, height .5s ease-out;
 
@@ -145,4 +147,137 @@ body {
 
 .pad:hover, #ball:hover {
     box-shadow: 2px 2px 2px 0 #000000a0;
+}
+
+.siEnemy {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.space-invader { 
+    float: left;
+    width: 0.25em; 
+    height: 0.25em; 
+    margin: 40px 40px;
+}
+
+.space-invader.animate { 
+  animation: 1s infinite;
+}
+  
+.space-invader-1 {
+    box-shadow:
+      0 0 0 .25em black,
+      0 .25em 0 .25em black,
+      -.625em .375em 0 .125em black,
+      .625em .375em 0 .125em black,
+      -.75em -.75em 0 0 black,
+      .75em -.75em 0 0 black,
+      -.5em -.5em 0 0 black,
+      .5em -.5em 0 0 black,
+      -.75em -.25em 0 0 black,
+      -.5em -.25em 0 0 black,
+      .5em -.25em 0 0 black,
+      .75em -.25em 0 0 black,
+      -1em 0 0 0 black,
+      -.75em 0 0 0 black,
+      .75em 0 0 0 black,
+      1em 0 0 0 black,
+      -1em .25em 0 0 black,
+      1em .25em 0 0 black,
+      -.75em .75em 0 0 black,
+      .75em .75em 0 0 black,
+      /* Left Arm */
+      1.25em .25em 0 0 black,
+      1.25em .5em 0 0 black,
+      1.25em .75em 0 0 black,
+      /* Right Arm */
+      -1.25em .25em 0 0 black,
+      -1.25em .5em 0 0 black,
+      -1.25em .75em 0 0 black,
+      /* Left Foot */
+      -.25em 1em 0 0 black,
+      -.5em 1em 0 0 black,
+      /* Right Foot */
+      .25em 1em 0 0 black,
+      .5em 1em 0 0 black;
+}
+
+.space-invader-1.animate {
+  animation-name: space-invader-1;
+}
+
+.space-invader-2 { 
+  box-shadow: 
+    /* Body */
+    -.125em -.5em 0 .25em black,
+    .125em -.5em 0 .25em black,
+    -.75em -.375em 0 .125em black,
+    -.875em -.375em 0 .125em black,
+    .75em -.375em 0 .125em black,
+    .875em -.375em 0 .125em black,
+    -1em 0 0 .25em black,
+    1em 0 0 .25em black,
+    -.5em .25em 0 0 black,
+    -.25em .25em 0 0 black,
+    0 .25em 0 0 black,
+    .25em .25em 0 0 black,
+    .5em .25em 0 0 black,
+    /* Crotch */
+    .3125em .5em 0 0 black,
+    .5em .5em 0 0 black,
+    .5em .5em 0 0 black,
+    -.3125em .5em 0 0 black,
+    -.5em .5em 0 0 black,
+    -.5em .5em 0 0 black,
+    .0625em .75em 0 0 black,
+    -.0625em .75em 0 0 black,
+    /* Right Leg */
+    -.625em .75em 0 0 black,
+    -.8125em .75em 0 0 black,
+    -1.0625em 1em 0 0 black,
+    -1.25em 1em 0 0 black,
+    /* Left Leg */
+    .625em .75em 0 0 black,
+    .8125em .75em 0 0 black,
+    1.0625em 1em 0 0 black,
+    1.25em 1em 0 0 black;
+}
+
+.space-invader-2.animate {
+  animation-name: space-invader-2;
+}
+
+.space-invader-3 { 
+  box-shadow: 
+    /* Body */
+    0 -.625em 0 .125em black,
+    -.25em -.375em 0 .125em black,
+    .25em -.375em 0 .125em black,
+    .625em -.25em 0 0 black,
+    -.625em -.25em 0 0 black,
+    0 .125em 0 .125em black,
+    -.75em .125em 0 .125em black,
+    .75em .125em 0 .125em black,
+    .375em .25em 0 0 black,
+    -.375em .25em 0 0 black,
+    /* Crotch */
+    .125em .5em 0 0 black,
+    -.125em .5em 0 0 black,
+    /* Right Leg */
+    -.625em .5em 0 0 black,
+    -.875em .75em 0 0 black,
+    -.625em 1em 0 0 black,
+    -.625em 1em 0 0 black,
+    /* Left Leg */
+    .625em .5em 0 0 black,
+    .875em .75em 0 0 black,
+    .625em 1em 0 0 black,
+    .625em 1em 0 0 black;
+}
+
+.space-invader-3.animate {
+  animation-name: space-invader-3;
 }

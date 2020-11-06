@@ -52,7 +52,6 @@ ready = () => {
     setVariables();
 
     setColors();
-    window.onresize = setColors;
 
     animateTitleCard();
 
@@ -146,8 +145,9 @@ raiseCurtain = () => {
 }
 
 addScrollInteraction = () => {
+    raiseCurtain();
+
     if (isTouchDevice()) {
-        raiseCurtain();
         return;
     }
 
@@ -196,6 +196,8 @@ animateTitleCard = () => {
 
         titleText.style.transition = 'none';
         titleText.style.textShadow = `${-30 * x}px ${-30 * y}px #00000050`;
+
+        event.preventDefault();
     };
 
     const end = (event) => {
@@ -236,6 +238,7 @@ setGame = () => {
     let games = [
         'none',
         'pong',
+        // 'space-invader',
     ];
 
     board.addEventListener('click', (event) => {
@@ -249,11 +252,25 @@ setGame = () => {
                 document.getElementById('pong').style.display = 'none';
                 clearInterval(pongAnimate);
                 break;
+            case 'space-invader':
+                document.getElementById('space-invader').style.display = 'none';
+                // clearInterval(siAnimate);
+                break;
         }
 
         // set new game
         game++;
         game %= games.length
+        switch(games[game]) {
+            case 'pong':
+                document.getElementById('pong').style.display = 'block';
+                playPong();
+                break;
+            case 'space-invader':
+                document.getElementById('space-invader').style.display = 'block';
+                break;
+        }
+
         if (game) {
             titleCard.style.filter = 'blur(5px)';
             document.getElementById('icon-group').style.pointerEvents = 'none';
@@ -261,13 +278,6 @@ setGame = () => {
             titleCard.style.filter = 'blur(0)';
             document.getElementById('icon-group').style.pointerEvents = 'auto';
         }
-        switch(games[game]) {
-            case 'pong':
-                document.getElementById('pong').style.display = 'block';
-                playPong();
-                return;
-        }
-        controllerPos = event.clientX;
     });
 }
 
@@ -302,10 +312,10 @@ playPong = () => {
     let player2YPos = parseInt(player2Style.top.replace('px', ''));
     let player2MovX = 0;
 
-    let playerSpeed = 10;
-    let ballSpeed = 2;
+    let playerSpeed = 5;
+    let ballSpeed = 1;
 
-    pongAnimate = setInterval(frame, 10);
+    pongAnimate = setInterval(frame, 5);
 
     function frame() {
         // movePlayer1
