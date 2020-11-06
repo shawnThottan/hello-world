@@ -297,13 +297,13 @@ setGame = () => {
                 break;
         }
 
-        if (game) {
-            // titleCard.style.filter = 'blur(5px)';
+        /* if (game) {
+            titleCard.style.filter = 'blur(5px)';
             document.getElementById('icon-group').style.pointerEvents = 'none';
         } else {
-            // titleCard.style.filter = 'blur(0)';
+            titleCard.style.filter = 'blur(0)';
             document.getElementById('icon-group').style.pointerEvents = 'auto';
-        }
+        } */
     });
 }
 
