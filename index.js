@@ -43,6 +43,7 @@ let player1;
 let player2;
 let ball;
 let titleCard;
+let titleText;
 
 let selectedColorGradient;
 let noOfPanels;
@@ -53,8 +54,9 @@ ready = () => {
     setColors();
     window.onresize = setColors;
 
-    animate();
     animateTitleCard();
+
+    setGame();
 }
 
 setVariables = () => {
@@ -64,6 +66,7 @@ setVariables = () => {
     player2 = document.getElementById('player2');
     ball = document.getElementById('ball');
     titleCard = document.getElementById('title');
+    titleText = document.getElementById('text');
 
     const index = Math.round(Math.random() * (colorGradients.length - 1));
     selectedColorGradient = colorGradients[index];
@@ -180,22 +183,107 @@ addScrollInteraction = () => {
     };
 }
 
-animate = () => {
+animateTitleCard = () => {
+    if (isTouchDevice()) {
+        titleCard.onmouseclick = (event) => {
+            const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
+            const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
+
+            titleCard.style.transform = `translate(-50%, -50%) rotateX(${-20 * y}deg) rotateY(${20 * x}deg)`;
+            titleCard.style.boxShadow = `${-30 * x}px ${-30 * y}px 20px 0 #000000a0`;
+            titleText.style.textShadow = `${-20 * x}px ${-20 * y}px #00000050`;
+        }
+        return;
+    }
+
+    titleCard.onmouseenter = (event) => {
+        const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
+        const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
+
+        titleCard.style.transition = 'all .5s';
+        titleCard.style.transform = `translate(-50%, -50%) rotateX(${-20 * y}deg) rotateY(${20 * x}deg)`;
+        titleCard.style.boxShadow = `${-30 * x}px ${-30 * y}px 20px 0 #000000a0`;
+
+        titleText.style.transition = 'all .5s';
+        titleText.style.textShadow = `${-20 * x}px ${-20 * y}px #00000050`;
+
+        setTimeout(() => {
+            titleCard.onmousemove = (event) => {
+                const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
+                const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
+
+                titleCard.style.transition = 'none';
+                titleCard.style.transform = `translate(-50%, -50%) rotateX(${-30 * y}deg) rotateY(${30 * x}deg)`;
+                titleCard.style.boxShadow = `${-30 * x}px ${-30 * y}px 20px 0 #000000a0`;
+
+                titleText.style.transition = 'none';
+                titleText.style.textShadow = `${-30 * x}px ${-30 * y}px #00000050`;
+            }
+    
+            titleCard.onmouseleave = (event) => {
+                titleCard.onmousemove = null;
+
+                titleCard.style.transition = 'all .5s';
+                titleCard.style.transform = 'translate(-50%, -50%)';
+                titleCard.style.boxShadow = `0px 0px 0px 0 #000000a0`;
+
+                titleText.style.transition = 'all .5s';
+                titleText.style.textShadow = `0px 0px #00000050`;
+            };
+        }, 300);
+    }
+}
+
+setGame = () => {
+    let game = 0;
+    let games = [
+        'none',
+        'pong',
+    ];
+
+    board.addEventListener('click', (event) => {
+        if (event.srcElement.classList.contains('icon') || event.srcElement.classList.contains('icon')) { return };
+
+        // clean up
+        switch(games[game]) {
+            case 'none':
+                break;
+            case 'pong':
+                document.getElementById('pong').style.display = 'none';
+                clearInterval(pongAnimate);
+                break;
+        }
+
+        // set new game
+        game++;
+        game %= games.length
+        switch(games[game]) {
+            case 'pong':
+                document.getElementById('pong').style.display = 'block';
+                playPong();
+                return;
+        }
+        controllerPos = event.clientX;
+    });
+}
+
+let pongAnimate;
+playPong = () => {
     const ballStyle = window.getComputedStyle(ball);
     let player1Style = window.getComputedStyle(player1);
     let player2Style = window.getComputedStyle(player2);
-
-    let x = parseInt(ballStyle.left.replace('px', ''));
-    let y = parseInt(ballStyle.top.replace('px', ''));
 
     const ballRadius = parseInt(ballStyle.width.replace('px', '')) / 2;
     const padHeight = parseInt(player1Style.height.replace('px', ''));
     const padWidth = parseInt(player1Style.width.replace('px', ''));
 
+    let x = window.innerWidth / 2 + ballRadius / 2;
+    let y = window.innerHeight / 2 + ballRadius / 2;
+
     let ballMovX = 2;
     let ballMovY = 1;
 
-    let player1XPos = parseInt(player1Style.left.replace('px', ''));
+    let player1XPos = window.innerWidth / 2 + padWidth / 2;
     let player1YPos = parseInt(player1Style.top.replace('px', ''));
     let player1MovX = 0;
 
@@ -206,14 +294,14 @@ animate = () => {
     board.addEventListener('mouseleave', (event) => {
         controllerPos = undefined;
     });
-    let player2XPos = parseInt(player2Style.left.replace('px', ''));
+    let player2XPos = window.innerWidth / 2 + padWidth / 2;
     let player2YPos = parseInt(player2Style.top.replace('px', ''));
     let player2MovX = 0;
 
     let playerSpeed = 10;
     let ballSpeed = 2;
 
-    setInterval(frame, 10);
+    pongAnimate = setInterval(frame, 10);
     function frame() {
         // movePlayer1
         let playerDiff;
@@ -304,31 +392,5 @@ animate = () => {
 
         ball.style.left = x + 'px';
         ball.style.top = y + 'px';
-    }
-}
-
-animateTitleCard = () => {
-    titleCard.onmouseenter = (event) => {
-        const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
-        const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
-        titleCard.style.transform = `translate(-50%, -50%) rotateX(${-20 * y}deg) rotateY(${20 * x}deg)`;
-        titleCard.style.boxShadow = `${-10 * x}px ${-10 * y}px 10px 0 #000000a0`;
-
-        setTimeout(() => {
-            titleCard.onmousemove = (event) => {
-                const x = (event.clientX - (window.innerWidth / 2)) / (window.innerWidth / 2);
-                const y = (event.clientY - (window.innerHeight / 2)) / (window.innerHeight / 2);
-                titleCard.style.transition = 'none';
-                titleCard.style.transform = `translate(-50%, -50%) rotateX(${-20 * y}deg) rotateY(${20 * x}deg)`;
-                titleCard.style.boxShadow = `${-10 * x}px ${-10 * y}px 10px 0 #000000a0`;
-            }
-    
-            titleCard.onmouseleave = (event) => {
-                titleCard.onmousemove = null;
-                titleCard.style.transition = 'all .5s';
-                titleCard.style.transform = 'translate(-50%, -50%)';
-                titleCard.style.boxShadow = `0px 0px 10px 0 #000000a0`;
-            };
-        }, 300);
     }
 }
