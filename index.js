@@ -287,10 +287,10 @@ setGame = () => {
         }
 
         if (game) {
-            titleCard.style.filter = 'blur(5px)';
+            // titleCard.style.filter = 'blur(5px)';
             document.getElementById('icon-group').style.pointerEvents = 'none';
         } else {
-            titleCard.style.filter = 'blur(0)';
+            // titleCard.style.filter = 'blur(0)';
             document.getElementById('icon-group').style.pointerEvents = 'auto';
         }
     });
@@ -435,7 +435,7 @@ playSpaceInvaders = () => {
     invaders = [];
     bullets = [];
 
-    for (let i = 0; i < window.innerWidth - 300; i+=100) {
+    for (let i = 0; i < window.innerWidth - 700; i+=100) {
         for (let j = 0; j < window.innerHeight - 500; j+=100) {
             const invader = document.createElement('div');
             const invaderType = Math.round(Math.random() * 2) + 1;
@@ -445,8 +445,8 @@ playSpaceInvaders = () => {
             parent.href = 'https://codepen.io/DDN-Shep/pen/pvggaX';
             parent.target = '_target';
             parent.classList.add('siEnemy');
-            parent.style.bottom = 300 + j + 'px';
-            parent.style.left = 200 + i + 'px';
+            parent.style.bottom = 250 + j + 'px';
+            parent.style.left = 350 + i + 'px';
             parent.appendChild(invader);
 
             spaceInvader.appendChild(parent);
@@ -454,9 +454,14 @@ playSpaceInvaders = () => {
         }
     }
 
-    let frameCount = 0;
+    let shooterTime = 0;
+    let timeOfLastFrame = new Date().getTime();
     const frame = () => {
-        frameCount++;
+        const currentTime = new Date().getTime();
+        const timeDiff = currentTime - timeOfLastFrame;
+        shooterTime += timeDiff;
+        timeOfLastFrame = currentTime;
+        const frameCount  = timeDiff / 5;
 
         // move player
         if (controllerPos !== undefined) {
@@ -467,12 +472,14 @@ playSpaceInvaders = () => {
                 playerMovX = Math.sign(playerDiff);
             }
 
-            playerXPos += playerMovX * playerSpeed;
+            const calculatedDiff = playerMovX * playerSpeed * frameCount;
+            playerXPos += calculatedDiff > playerDiff ? playerDiff : calculatedDiff;
             player.style.left = playerXPos + 'px';
         }
 
         // shoot
-        if (!(frameCount % 50)) {
+        if (shooterTime > 300) {
+            shooterTime = 0;
             const bullet = document.createElement('div');
             bullet.classList.add('bullet');
             bullet.style.left = playerXPos + 'px';
@@ -486,7 +493,7 @@ playSpaceInvaders = () => {
             const bullet = bullets[i];
             const bottom = parseInt(bullet.style.bottom.replace('px', ''));
             const left = parseInt(bullet.style.left.replace('px', ''));
-            bullet.style.bottom = bottom + 2 + 'px';
+            bullet.style.bottom = bottom + 2 * frameCount + 'px';
 
             if (bottom > window.innerHeight) {
                 bullets.splice(i, 1);
@@ -495,11 +502,11 @@ playSpaceInvaders = () => {
 
             for (let j = 0; j < invaders.length; j++) {
                 const invader = invaders[j];
-                const invaderBottom = parseInt(invader.style.bottom.replace('px', ''));
+                const invaderBottom = parseInt(invader.style.bottom.replace('px', '')) + 50;
                 const invaderLeft = parseInt(invader.style.left.replace('px', ''));
                 yDiff = Math.abs(invaderBottom - bottom);
                 xDiff = Math.abs(invaderLeft - left);
-                if (yDiff < 10 && xDiff < 20) {
+                if (yDiff < 10 && xDiff < 30) {
                     invaders.splice(j, 1);
                     invader.remove();
                     bullets.splice(i, 1);
