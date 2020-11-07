@@ -216,7 +216,7 @@ animateTitleCard = () => {
         titleCard.style.boxShadow = `${-80 * x}px ${-80 * y}px 20px 0 #000000a0`;
 
         titleText.style.transition = 'none';
-        titleText.style.textShadow = `${-30 * x}px ${-30 * y}px #00000050`;
+        titleText.style.textShadow = `${-30 * x}px ${-30 * y}px 10px #00000050`;
 
         event.preventDefault();
     };
@@ -243,7 +243,7 @@ animateTitleCard = () => {
         titleCard.style.boxShadow = `${-30 * x}px ${-30 * y}px 20px 0 #000000a0`;
 
         titleText.style.transition = 'all .5s';
-        titleText.style.textShadow = `${-20 * x}px ${-20 * y}px #00000050`;
+        titleText.style.textShadow = `${-30 * x}px ${-30 * y}px 10px #00000050`;
 
         setTimeout(() => {
             titleCard.ontouchmove = titleCard.onmousemove = move;
