@@ -112,14 +112,14 @@ setVariables = () => {
 }
 
 setColors = () => {
-    let from = `rgba(${selectedColorGradient.from.r}, ${selectedColorGradient.from.g}, ${selectedColorGradient.from.b}, .9)`;
-    let to = `rgba(${selectedColorGradient.to.r}, ${selectedColorGradient.to.g}, ${selectedColorGradient.to.b}, .9)`;
+    let from = `rgb(${selectedColorGradient.from.r}, ${selectedColorGradient.from.g}, ${selectedColorGradient.from.b})`;
+    let to = `rgb(${selectedColorGradient.to.r}, ${selectedColorGradient.to.g}, ${selectedColorGradient.to.b})`;
     const gradient = `linear-gradient(to bottom right, ${from}, ${to})`;
+
     player1.style.backgroundImage = gradient;
     player2.style.backgroundImage = gradient;
     ball.style.backgroundImage = gradient;
-
-    titleCard.style.backgroundImage = `linear-gradient(to bottom right, ${`rgb(${selectedColorGradient.from.r}, ${selectedColorGradient.from.g}, ${selectedColorGradient.from.b})`}, ${`rgb(${selectedColorGradient.to.r}, ${selectedColorGradient.to.g}, ${selectedColorGradient.to.b})`})`;
+    titleCard.style.backgroundImage = gradient;
 
     while (bgElement.hasChildNodes()) {
         bgElement.removeChild(bgElement.firstChild);
@@ -142,8 +142,8 @@ setColors = () => {
         const gTo = selectedColorGradient.to.g - gDiff * (noOfPanels - (i + 1));
         const bTo = selectedColorGradient.to.b - bDiff * (noOfPanels - (i + 1));
 
-        from = `rgba(${rFrom}, ${gFrom}, ${bFrom}, .9)`;
-        to = `rgba(${rTo}, ${gTo}, ${bTo}, .9)`;
+        from = `rgb(${rFrom}, ${gFrom}, ${bFrom})`;
+        to = `rgb(${rTo}, ${gTo}, ${bTo})`;
         panel.style.backgroundImage = `linear-gradient(${from}, ${to})`;
 
         panel.setAttribute('gradient', 'primary');
@@ -213,7 +213,7 @@ animateTitleCard = () => {
 
         titleCard.style.transition = 'none';
         titleCard.style.transform = `translate(-50%, -50%) rotateX(${-30 * y}deg) rotateY(${30 * x}deg)`;
-        titleCard.style.boxShadow = `${-30 * x}px ${-30 * y}px 20px 0 #000000a0`;
+        titleCard.style.boxShadow = `${-80 * x}px ${-80 * y}px 20px 0 #000000a0`;
 
         titleText.style.transition = 'none';
         titleText.style.textShadow = `${-30 * x}px ${-30 * y}px #00000050`;
@@ -265,7 +265,7 @@ setGame = () => {
     board.addEventListener('click', (event) => {
         if (event.srcElement.classList.contains('icon') || event.srcElement.classList.contains('icon')) { return };
 
-        // clean up
+        /* clean up */
         switch(games[game]) {
             case 'none':
                 break;
@@ -283,7 +283,7 @@ setGame = () => {
                 break;
         }
 
-        // set new game
+        /* set new game */
         game++;
         game %= games.length
         switch(games[game]) {
@@ -337,7 +337,7 @@ playPong = () => {
     pongAnimate = setInterval(frame, 5);
 
     function frame() {
-        // movePlayer1
+        /* movePlayer1 */
         let playerDiff;
         if (y < window.innerHeight / 2) {
             playerDiff = x - player1XPos;
@@ -360,7 +360,7 @@ playPong = () => {
         if (player1XPos > window.innerWidth - padWidth / 2) player1XPos = window.innerWidth - padWidth / 2;
         player1.style.left = player1XPos + 'px';
 
-        // movePlayer2
+        /* movePlayer2 */
         if (controllerPos !== undefined) {
             playerDiff = controllerPos - player2XPos;
             if (Math.abs(playerDiff / window.innerWidth) < .01) {
@@ -391,7 +391,7 @@ playPong = () => {
         if (player2XPos > window.innerWidth - padWidth / 2) player2XPos = window.innerWidth - padWidth / 2;
         player2.style.left = player2XPos + 'px';
 
-        // moveBall
+        /* move ball */
         if (x - ballRadius <= 0 || x + ballRadius >= window.innerWidth)  { ballMovX *= -1; }
 
         if (y - ballRadius <= 0 || y + ballRadius >= window.innerHeight)  {
@@ -474,7 +474,7 @@ playSpaceInvaders = () => {
         timeOfLastFrame = currentTime;
         const frameCount  = timeDiff / 5;
 
-        // move player
+        /* move player */
         if (controllerPos !== undefined) {
             playerDiff = controllerPos - playerXPos;
             if (Math.abs(playerDiff / window.innerWidth) < .01) {
@@ -488,7 +488,7 @@ playSpaceInvaders = () => {
             player.style.left = playerXPos + 'px';
         }
 
-        // shoot
+        /* shoot */
         if (shooterTime > 300) {
             shooterTime = 0;
             const bullet = document.createElement('div');
@@ -499,7 +499,7 @@ playSpaceInvaders = () => {
             bullets.push(bullet);    
         }
 
-        // move bullet
+        /* move bullet */
         for (let i = 0; i < bullets.length; i++) {
             const bullet = bullets[i];
             const bottom = parseInt(bullet.style.bottom.replace('px', ''));

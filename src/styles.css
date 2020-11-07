@@ -8,7 +8,7 @@ body {
     padding: 0;
     overflow: hidden;
     background-color: blackfff;
-    font-family: 'target-font-family';
+    font-family: 'target-font-family', 'Comic Sans MS';
 }
 
 #background {
