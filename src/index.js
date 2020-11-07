@@ -452,9 +452,7 @@ playSpaceInvaders = () => {
             const invaderType = Math.round(Math.random() * 2) + 1;
             invader.classList.add('space-invader', `space-invader-${invaderType}` , 'animate');
 
-            const parent = document.createElement('a');
-            parent.href = 'https://codepen.io/DDN-Shep/pen/pvggaX';
-            parent.target = '_target';
+            const parent = document.createElement('div');
             parent.classList.add('siEnemy');
             parent.style.bottom = 250 + j + 'px';
             parent.style.left = 350 + i + 'px';
